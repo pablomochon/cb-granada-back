@@ -25,7 +25,6 @@ public class Usuario {
 
     private int asistencia_previa;
 
-    @ManyToOne
-    @JoinColumn(name = "partido_uuid")
+    @OneToOne (mappedBy = "usuario")
     private Partido partido;
 }

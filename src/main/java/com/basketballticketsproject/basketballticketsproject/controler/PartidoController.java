@@ -6,6 +6,8 @@ import com.basketballticketsproject.basketballticketsproject.service.PartidoServ
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/cbgranada-api/v1")
 public class PartidoController {
@@ -21,5 +23,10 @@ public class PartidoController {
     @GetMapping("/usuariosConfirmados")
     public int getUsuariosConfirmados(){
         return partidoService.getUsuariosConfirmados();
+    }
+
+    @GetMapping("/getPartidos")
+    public List<Partido> getPartidos(){
+        return partidoService.getPartdios();
     }
 }

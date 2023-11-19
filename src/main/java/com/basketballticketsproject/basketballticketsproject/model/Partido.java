@@ -21,12 +21,15 @@ public class Partido {
     @GeneratedValue
     private UUID partidoId;
 
-    @OneToMany(mappedBy = "partido")
-    private List<Usuario> listaUsuarios;
+    @OneToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
 
     private String equipoLocal;
 
     private String equipoVisitante;
+
+    private String numEntrada;
 
     private Date fechaPartido;
 
