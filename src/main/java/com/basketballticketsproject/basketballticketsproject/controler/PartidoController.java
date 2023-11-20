@@ -36,4 +36,9 @@ public class PartidoController {
     public Optional<Partido> getPartidoById(@PathVariable UUID partidoId) {
         return partidoService.getPartidoById(partidoId);
     }
+
+    @GetMapping("crearCarpetas")
+    public void crearCarpetasConFechas(){
+        partidoService.crearCarpetasConFechas();
+    }
 }
