@@ -1,6 +1,6 @@
 package com.basketballticketsproject.basketballticketsproject.service;
 
-import com.basketballticketsproject.basketballticketsproject.model.Usuario;
+import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

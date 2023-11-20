@@ -1,4 +1,4 @@
-package com.basketballticketsproject.basketballticketsproject.model;
+package com.basketballticketsproject.basketballticketsproject.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

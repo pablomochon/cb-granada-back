@@ -1,22 +1,19 @@
-package com.basketballticketsproject.basketballticketsproject.pdf;
+package com.basketballticketsproject.basketballticketsproject.service;
 
-
-
-
-import com.aspose.pdf.Document;
-import com.aspose.pdf.License;
-import com.aspose.pdf.Page;
-import com.aspose.pdf.PageCollection;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+@Service
+public class SplitPDFByPages {
 
-public class SplitPDFByPagesInJava {
-    public static void main(String[] args) throws Exception {
+    public void splitPdf() throws IOException {
         File file = new File("TFG_BarManagment.pdf");
         PDDocument document = PDDocument.load(file);
 

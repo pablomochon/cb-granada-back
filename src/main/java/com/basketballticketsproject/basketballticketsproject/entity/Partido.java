@@ -1,4 +1,4 @@
-package com.basketballticketsproject.basketballticketsproject.model;
+package com.basketballticketsproject.basketballticketsproject.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Entity

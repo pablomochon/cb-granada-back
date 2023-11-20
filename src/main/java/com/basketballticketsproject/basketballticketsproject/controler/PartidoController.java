@@ -1,7 +1,7 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
 
-import com.basketballticketsproject.basketballticketsproject.model.Partido;
+import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.service.PartidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

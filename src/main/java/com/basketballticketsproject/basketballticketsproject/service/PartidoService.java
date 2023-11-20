@@ -1,7 +1,7 @@
 package com.basketballticketsproject.basketballticketsproject.service;
 
 import com.basketballticketsproject.basketballticketsproject.Excel.FechaPartido;
-import com.basketballticketsproject.basketballticketsproject.model.Partido;
+import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.repo.PartidoRepo;
 import com.poiji.bind.Poiji;
 import org.springframework.beans.factory.annotation.Autowired;
