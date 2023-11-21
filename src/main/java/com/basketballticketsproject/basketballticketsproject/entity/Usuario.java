@@ -1,11 +1,11 @@
 package com.basketballticketsproject.basketballticketsproject.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -18,7 +18,7 @@ public class Usuario {
     @GeneratedValue
     private UUID userId;
 
-    private String name;
+    private String nombre;
 
     @Column(unique = true)
     private String email;
@@ -27,7 +27,13 @@ public class Usuario {
 
     private boolean entrada;
 
-    @ManyToOne
-    @JoinColumn(name="sorteo_id", nullable=false)
-    private Sorteo sorteo;
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            },
+            mappedBy = "usuarios")
+    @JsonIgnore
+    private Set<Sorteo> tutorials = new HashSet<>();
+
 }

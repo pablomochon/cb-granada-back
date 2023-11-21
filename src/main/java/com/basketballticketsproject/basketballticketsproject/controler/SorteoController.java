@@ -1,12 +1,10 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
+import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,5 +18,15 @@ public class SorteoController {
     @GetMapping("/getUsuariosSorteo/{fecha}")
     public List<Usuario> getUsuariosSorteo(@PathVariable String fecha) {
         return sorteoService.getUsuariosSorteo(fecha);
+    }
+
+    @PostMapping("/addSorteo")
+    public Sorteo addSorteo(@RequestParam(name = "fecha") String fecha, @RequestBody Sorteo sorteo) {
+        return sorteoService.addSorteo(fecha, sorteo);
+    }
+
+    @GetMapping("/getSorteos")
+    public List<Sorteo> getSorteos() {
+        return sorteoService.getSorteos();
     }
 }

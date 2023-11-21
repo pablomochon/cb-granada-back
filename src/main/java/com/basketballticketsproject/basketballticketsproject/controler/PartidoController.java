@@ -18,8 +18,8 @@ public class PartidoController {
     PartidoService partidoService;
 
     @PostMapping("/addPartido")
-    public void addPartido(@RequestBody Partido partido) {
-        partidoService.addPartido(partido);
+    public Partido addPartido(@RequestBody Partido partido) {
+        return partidoService.addPartido(partido);
     }
 
     @GetMapping("/usuariosConfirmados")
