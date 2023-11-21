@@ -6,7 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,8 +14,16 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Partido {
+public class Sorteo {
 
     @Id
-    private String fechaPartido;
+    @GeneratedValue (strategy = GenerationType.UUID)
+    private UUID idSorteo;
+
+    @OneToMany(mappedBy = "sorteo")
+    private List<Usuario> usuario;
+
+    @OneToOne
+    @JoinColumn(name = "id_fechaPartido")
+    private Partido partido;
 }

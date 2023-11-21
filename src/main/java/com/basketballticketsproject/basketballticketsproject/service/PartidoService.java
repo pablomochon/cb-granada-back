@@ -39,7 +39,7 @@ public class PartidoService {
         return Poiji.fromExcel(archivoFechas, FechaPartido.class);
     }
 
-    public void crearCarpetasConFechas() {
+    public void crearCarpetasConFechasdelExcel() {
         String path = "C:\\Fechas";
         File carpetaConFechas = new File(path);
         if (carpetaConFechas.mkdir()){

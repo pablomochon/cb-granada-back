@@ -39,6 +39,6 @@ public class PartidoController {
 
     @GetMapping("crearCarpetas")
     public void crearCarpetasConFechas(){
-        partidoService.crearCarpetasConFechas();
+        partidoService.crearCarpetasConFechasdelExcel();
     }
 }

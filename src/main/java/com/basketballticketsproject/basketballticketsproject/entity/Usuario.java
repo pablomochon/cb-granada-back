@@ -25,6 +25,9 @@ public class Usuario {
 
     private int asistencia_previa;
 
-    @OneToOne (mappedBy = "usuario")
-    private Partido partido;
+    private boolean entrada;
+
+    @ManyToOne
+    @JoinColumn(name="sorteo_id", nullable=false)
+    private Sorteo sorteo;
 }
