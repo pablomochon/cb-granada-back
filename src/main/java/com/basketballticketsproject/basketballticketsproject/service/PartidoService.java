@@ -26,9 +26,6 @@ public class PartidoService {
         return partidoRepo.findAll();
     }
 
-    public int getUsuariosConfirmados() {
-        return partidoRepo.getUsuariosConfirmados();
-    }
 
     public Optional<Partido> getPartidoById(UUID id) {
         return partidoRepo.findById(id);
@@ -49,6 +46,9 @@ public class PartidoService {
         }
 
         for (FechaPartido fechaPartido : getFechasPartidos()) {
+            Partido partido = new Partido();
+            partido.setFechaPartido(fechaPartido.getFecha());
+            partidoRepo.save(partido);
             File carpeta = new File(path + "\\" + fechaPartido.getFecha());
             if (!carpeta.exists()) {
                 carpeta.mkdir();

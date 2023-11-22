@@ -1,15 +1,13 @@
 package com.basketballticketsproject.basketballticketsproject.entity;
 
 import jakarta.persistence.*;
+import jakarta.servlet.http.Part;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -21,6 +19,10 @@ public class Sorteo {
     @Id
     @GeneratedValue (strategy = GenerationType.UUID)
     private UUID idSorteo;
+
+    @OneToOne
+    @JoinColumn(name = "id_partido")
+    private Partido partido;
 
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {

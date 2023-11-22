@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/cbgranada-api/v1")
-public class SorteoController {
+public class  SorteoController {
 
     @Autowired
     private SorteoService sorteoService;
@@ -22,11 +23,17 @@ public class SorteoController {
 
     @PostMapping("/addSorteo")
     public Sorteo addSorteo(@RequestParam(name = "fecha") String fecha, @RequestBody Sorteo sorteo) {
-        return sorteoService.addSorteo(fecha, sorteo);
+        return null;
     }
 
     @GetMapping("/getSorteos")
     public List<Sorteo> getSorteos() {
         return sorteoService.getSorteos();
+    }
+
+
+    @PostMapping("/saveUsuarioSorteo/{userID}/{fecha}")
+    public Sorteo saveUsuarioSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
+        return sorteoService.saveUsuarioSorteo(userID, fecha);
     }
 }

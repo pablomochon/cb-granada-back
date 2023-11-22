@@ -19,7 +19,5 @@ public class Partido {
     @Id
     private String fechaPartido;
 
-    @OneToOne
-    @JoinColumn(name = "id_sorteo")
-    private Sorteo sorteo;
+
 }

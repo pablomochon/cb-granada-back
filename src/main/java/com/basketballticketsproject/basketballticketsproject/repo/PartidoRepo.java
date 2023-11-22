@@ -8,6 +8,4 @@ import java.util.UUID;
 
 public interface PartidoRepo extends JpaRepository<Partido, UUID> {
 
-    @Query(value = "SELECT COUNT(*) FROM Partido WHERE confirmacion = true", nativeQuery = true)
-    int getUsuariosConfirmados();
 }

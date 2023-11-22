@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
@@ -34,6 +32,6 @@ public class Usuario {
             },
             mappedBy = "usuarios")
     @JsonIgnore
-    private Set<Sorteo> tutorials = new HashSet<>();
+    private Set<Sorteo> sorteos = new HashSet<>();
 
 }

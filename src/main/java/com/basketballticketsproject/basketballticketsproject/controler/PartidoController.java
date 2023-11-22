@@ -22,10 +22,6 @@ public class PartidoController {
         return partidoService.addPartido(partido);
     }
 
-    @GetMapping("/usuariosConfirmados")
-    public int getUsuariosConfirmados(){
-        return partidoService.getUsuariosConfirmados();
-    }
 
     @GetMapping("/getPartidos")
     public List<Partido> getPartidos(){
