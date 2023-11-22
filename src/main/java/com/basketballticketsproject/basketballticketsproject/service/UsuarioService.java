@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
@@ -15,19 +16,11 @@ public class UsuarioService {
     private UsuarioRepo usuarioRepo;
 
     public Usuario getUsuarioByName(String name) {
-        Usuario user = usuarioRepo.findByName(name);
-        if (ObjectUtils.isEmpty(user)) {
-            throw new IllegalStateException("Usuario no encontrado");
-        }
-        return user;
+        return usuarioRepo.findByName(name);
     }
 
     public Usuario getUsuarioByEmail(String email) {
-        Usuario user = usuarioRepo.findByEmail(email);
-        if (ObjectUtils.isEmpty(user)) {
-            throw new IllegalStateException("Email no encontrado");
-        }
-        return user;
+        return usuarioRepo.findByEmail(email);
     }
 
     public Usuario saveUsuario(Usuario usuario){
@@ -38,4 +31,20 @@ public class UsuarioService {
         return usuarioRepo.findAll();
     }
 
+    public Usuario modificarUsuario(UUID id, Usuario usuarioNuevo) {
+        Usuario updateUser = usuarioRepo.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Employee not exist with id: " + id));
+        updateUser.setEmail(usuarioNuevo.getEmail());
+        updateUser.setNombre(usuarioNuevo.getNombre());
+        return usuarioRepo.save(updateUser);
+    }
+
+    public void borrarUsuario(UUID id) {
+        Usuario deleteUser = usuarioRepo.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Employee not exist with id: " + id));
+        if (ObjectUtils.isEmpty(deleteUser)) {
+            throw new IllegalStateException("Usuario para borrar no encontrado");
+        }
+        usuarioRepo.delete(deleteUser);
+    }
 }

@@ -11,7 +11,4 @@ import java.util.UUID;
 
 public interface SorteoRepo extends JpaRepository<Sorteo, UUID> {
 
-    @Query(value = "SELECT usuario_id FROM Sorteo WHERE id_partido = ?1", nativeQuery = true)
-    public List<Usuario> getUsuarioaParticipantes(String fecha);
-
 }

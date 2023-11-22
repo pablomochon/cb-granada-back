@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.basketballticketsproject.basketballticketsproject.utils.Constants.PATH_CARPETA_FECHAS_PARTIDOS;
+
 @Service
 public class PartidoService {
 
@@ -37,12 +39,10 @@ public class PartidoService {
     }
 
     public void crearCarpetasConFechasdelExcel() {
-        String path = "C:\\Fechas";
+        String path = PATH_CARPETA_FECHAS_PARTIDOS;
         File carpetaConFechas = new File(path);
-        if (carpetaConFechas.mkdir()){
-            System.out.println("CREADAAAAA");
-        } else {
-            System.out.println("falloooooo");
+        if (!carpetaConFechas.exists()) {
+            carpetaConFechas.mkdir();
         }
 
         for (FechaPartido fechaPartido : getFechasPartidos()) {

@@ -33,6 +33,8 @@ public class PartidoController {
         return partidoService.getPartidoById(partidoId);
     }
 
+    //crear las carpetas con las fechas de los partidos, leidas desde un excel
+    //a su vez, mete todas las fechas en la tabla de partidos
     @GetMapping("crearCarpetas")
     public void crearCarpetasConFechas(){
         partidoService.crearCarpetasConFechasdelExcel();
