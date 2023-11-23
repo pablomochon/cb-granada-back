@@ -6,6 +6,7 @@ import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.repo.PartidoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -26,9 +27,11 @@ public class SorteoService {
     @Autowired
     private PartidoRepo partidoRepo;
 
-    public List<Usuario> getUsuariosSorteo(String fecha) {
-        return null;
-
+    public Set<Usuario> getUsuariosSorteo(String fecha) {
+        List<Sorteo> sorteos = sorteoRepo.findByFecha(fecha);
+        Set<Usuario> usuarios = new HashSet<>();
+        sorteos.forEach(s -> usuarios.addAll(s.getUsuarios()));
+        return usuarios;
     }
 
 
@@ -36,22 +39,25 @@ public class SorteoService {
         return sorteoRepo.findAll();
     }
 
-    public Sorteo saveUsuarioSorteo(UUID idUser, String fecha){
-        Set<Usuario> usuarioSet = new HashSet<>();
-        Sorteo sorteo = new Sorteo();
+    public Sorteo saveUsuarioSorteo(UUID idUser, String fecha) {
         Usuario usuario = usuarioRepo.findById(idUser).orElse(null);
+        Sorteo sorteo = new Sorteo();
         if (sorteo.getUsuarios().size() <= NUM_ENTRADAS) {
             if (!ObjectUtils.isEmpty(usuario)) {
-                usuario.setEntrada(true);
-                usuarioSet.add(usuario);
-                sorteo.setUsuarios(usuarioSet);
+                sorteo.getUsuarios().add(usuario);
                 sorteo.setPartido(Partido.builder().fechaPartido(fecha).build());
-            }
-        } else {
-            return null;
-        }
+                usuario.getSorteos().add(sorteo);
+                usuario.setAsistencia_previa(usuario.getAsistencia_previa() + 1);
 
-      return sorteoRepo.save(sorteo);
+                //System.out.println("SORTEO----" + sorteo);
+                sorteoRepo.save(sorteo);
+            }
+        }
+        return null;
     }
 
+
+     /*public Sorteo getUsuariosSorteoByFecha(String fecha) {
+        return sorteoRepo.getUsuariosByFecha(fecha);
+    }*/
 }

@@ -7,7 +7,8 @@ import lombok.*;
 import java.util.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -34,4 +35,16 @@ public class Usuario {
     @JsonIgnore
     private Set<Sorteo> sorteos = new HashSet<>();
 
+
+    @Override
+    public String toString() {
+        return "Usuario{" +
+                "userId=" + userId +
+                ", nombre='" + nombre + '\'' +
+                ", email='" + email + '\'' +
+                ", asistencia_previa=" + asistencia_previa +
+                ", entrada=" + entrada +
+                ", sorteos=" + sorteos +
+                '}';
+    }
 }

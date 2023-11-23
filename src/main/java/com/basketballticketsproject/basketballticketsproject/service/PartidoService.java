@@ -38,6 +38,10 @@ public class PartidoService {
         return Poiji.fromExcel(archivoFechas, FechaPartido.class);
     }
 
+    public void removePartido (UUID id) {
+        partidoRepo.deleteById(id);
+    }
+
     public void crearCarpetasConFechasdelExcel() {
         String path = PATH_CARPETA_FECHAS_PARTIDOS;
         File carpetaConFechas = new File(path);

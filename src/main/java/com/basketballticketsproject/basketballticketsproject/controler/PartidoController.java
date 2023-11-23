@@ -22,6 +22,10 @@ public class PartidoController {
         return partidoService.addPartido(partido);
     }
 
+    @DeleteMapping("/borrarPartido/{id}")
+    public void borrarPartidoById(@PathVariable UUID id) {
+        partidoService.removePartido(id);
+    }
 
     @GetMapping("/getPartidos")
     public List<Partido> getPartidos(){

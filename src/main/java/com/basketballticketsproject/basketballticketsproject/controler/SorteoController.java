@@ -10,6 +10,7 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @RestController
@@ -21,8 +22,8 @@ public class  SorteoController {
 
     //dada la fecha del sorteo, obtener los usuarios de ese partido
     @GetMapping("/getUsuariosSorteo/{fecha}")
-    public ResponseEntity<List<Usuario>> getUsuariosSorteo(@PathVariable String fecha) {
-        List<Usuario> usuarios =  sorteoService.getUsuariosSorteo(fecha);
+    public ResponseEntity<Set<Usuario>> getUsuariosSorteo(@PathVariable String fecha) {
+        Set<Usuario> usuarios =  sorteoService.getUsuariosSorteo(fecha);
         if (usuarios.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -36,13 +37,14 @@ public class  SorteoController {
 
 
     //guardar usurio que se apunte al partido, pasandole su id y la fecha del partido
-    @PostMapping("/saveUsuarioSorteo/{userID}/{fecha}")
-    public ResponseEntity<Sorteo> saveUsuarioSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
+    @PostMapping("/saveUsuarioSorteo/{userID}")
+    public ResponseEntity<Sorteo> saveUsuarioSorteo(@PathVariable UUID userID, @RequestParam String fecha) {
         Sorteo sorteo =  sorteoService.saveUsuarioSorteo(userID, fecha);
         if (ObjectUtils.isEmpty(sorteo)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(sorteo, HttpStatus.OK);
     }
+
 
 }
