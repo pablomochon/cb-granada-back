@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UsuarioRepo extends JpaRepository<Usuario, UUID> {
 
-    @Query(value = "SELECT * FROM Usuario WHERE name = ?1", nativeQuery = true)
+    @Query(value = "SELECT * FROM Usuario WHERE nombre = ?1", nativeQuery = true)
     Usuario findByName(String name);
 
     //usuarios que eligen ir

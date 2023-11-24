@@ -5,4 +5,6 @@ public class Constants {
     public static int NUM_ENTRADAS = 50;
 
     public static String PATH_CARPETA_FECHAS_PARTIDOS = "C:\\Fechas_Partidos";
+
+    public static String PATH_CARPETA_PDF = "C:\\PDF_PRUEBA";
 }

@@ -42,11 +42,12 @@ public class SorteoService {
     public Sorteo saveUsuarioSorteo(UUID idUser, String fecha) {
         Usuario usuario = usuarioRepo.findById(idUser).orElse(null);
         Sorteo sorteo = new Sorteo();
-        if (sorteo.getUsuarios().size() <= NUM_ENTRADAS) {
+        if (sorteoRepo.findByFecha(fecha).size() <= NUM_ENTRADAS) {
             if (!ObjectUtils.isEmpty(usuario)) {
                 sorteo.getUsuarios().add(usuario);
                 sorteo.setPartido(Partido.builder().fechaPartido(fecha).build());
                 usuario.getSorteos().add(sorteo);
+                usuario.setEntrada(true);
                 usuario.setAsistencia_previa(usuario.getAsistencia_previa() + 1);
 
                 //System.out.println("SORTEO----" + sorteo);
