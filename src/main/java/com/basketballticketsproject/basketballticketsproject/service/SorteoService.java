@@ -47,7 +47,6 @@ public class SorteoService {
                 sorteo.getUsuarios().add(usuario);
                 sorteo.setPartido(Partido.builder().fechaPartido(fecha).build());
                 usuario.getSorteos().add(sorteo);
-                usuario.setEntrada(true);
                 usuario.setAsistencia_previa(usuario.getAsistencia_previa() + 1);
 
                 //System.out.println("SORTEO----" + sorteo);

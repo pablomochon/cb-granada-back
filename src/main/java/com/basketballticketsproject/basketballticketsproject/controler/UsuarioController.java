@@ -68,10 +68,10 @@ public class UsuarioController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
-    //dividir por paginas individuales el pdf con las 50 entradas
-    @GetMapping("/splitPdf")
-    public void splitPdf() throws IOException {
-        splitPDFByPages.splitPdf();
+    //dividir por paginas individuales el pdf con las 50 entradas de la carpeta que se especifique por parametro
+    @GetMapping("/splitPdf/{fecha}")
+    public void splitPdf(@PathVariable String fecha) throws IOException {
+        splitPDFByPages.splitPdf(fecha);
     }
 
     //modificar un usuario dada su id

@@ -24,9 +24,9 @@ public class Usuario {
 
     private int asistencia_previa;
 
-    private boolean entrada;
+    private String entrada;
 
-    @ManyToMany(fetch = FetchType.LAZY,
+    @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
                     CascadeType.MERGE

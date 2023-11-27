@@ -17,6 +17,7 @@ public class Partido {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @OrderBy
     private String fechaPartido;
 
     @Override

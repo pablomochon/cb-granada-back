@@ -22,11 +22,11 @@ public class Sorteo {
     @JoinColumn(name = "id_partido", referencedColumnName = "id")
     private Partido partido;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "sorteo_usuarios",
-            joinColumns = { @JoinColumn(name = "sorteo_id") },
-            inverseJoinColumns = { @JoinColumn(name = "usuario_id") })
-    private Set<Usuario> usuarios = new HashSet<>();
+            joinColumns = { @JoinColumn(name = "sorteo_id", referencedColumnName = "idSorteo") },
+            inverseJoinColumns = { @JoinColumn(name = "usuario_id", referencedColumnName = "userId") })
+    private Set<Usuario> usuarios = new LinkedHashSet<>();
 
     @Override
     public String toString() {
