@@ -30,6 +30,7 @@ public class  SorteoController {
         return new ResponseEntity<>(usuarios, HttpStatus.OK);
     }
 
+    //obtener todos los sorteos
     @GetMapping("/getSorteos")
     public List<Sorteo> getSorteos() {
         return sorteoService.getSorteos();
@@ -46,5 +47,10 @@ public class  SorteoController {
         return new ResponseEntity<>(sorteo, HttpStatus.OK);
     }
 
+    //quitar del sorteo a la persona que se quiera desinscribirse
+    @DeleteMapping("/deleteUsuarioFromSorteo/{userID}")
+    public void deleteUsuarioFromSorteo(@PathVariable UUID userID, @RequestParam String fecha) {
+        sorteoService.deleteUsuarioFromSorteo(userID, fecha);
+    }
 
 }

@@ -23,7 +23,7 @@ public interface SorteoRepo extends JpaRepository<Sorteo, UUID> {
 
     @Transactional
     @Query(value = "SELECT s FROM Sorteo s WHERE s.partido.fechaPartido = ?1")
-    List<Sorteo> findByFecha(String fecha);
+    Sorteo findByFecha(String fecha);
 
     @Query(value = "SELECT idSorteo FROM Sorteo s WHERE s.partido.fechaPartido = ?1")
     Sorteo getIdByFecha(String fecha);

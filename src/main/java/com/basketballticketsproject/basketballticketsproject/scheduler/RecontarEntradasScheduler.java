@@ -15,6 +15,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.*;
 import java.util.List;
 import java.util.Set;
 
@@ -36,7 +38,7 @@ public class RecontarEntradasScheduler {
     @Autowired
     private UsuarioRepo usuarioRepo;
 
-    @Scheduled(cron = "* * 14 L * *")
+    //@Scheduled(cron = "*/80 * * * * *")
     public void enviarCorreo() {
         List<Partido> fechasSortAsc = partidoRepo.getFechasSortAsc();
         if (!CollectionUtils.isEmpty(fechasSortAsc)) {
@@ -47,13 +49,40 @@ public class RecontarEntradasScheduler {
                 String emailEntrada = enviarEmail.enviarEmailEntrada(usuario, partido.getFechaPartido());
                 System.out.println("emaill entrada: " + emailEntrada);
                 usuario.setEntrada(emailEntrada);
-                File borrar = new File(PATH_CARPETA_FECHAS_PARTIDOS + "\\" + partido.getFechaPartido() + "\\" + emailEntrada);
-                System.out.println(borrar);
-                if (borrar.delete() ) {
-                    System.out.println("oleole");
+                try {
+                    crearCarpetaEntradasAsignadas(partido.getFechaPartido(), emailEntrada);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
+
                 usuarioRepo.save(usuario);
             });
+        }
+    }
+
+    private void crearCarpetaEntradasAsignadas(String fechaPartido, String emailEntrada) throws IOException {
+
+        File carpetasAsig = new File(PATH_CARPETA_FECHAS_PARTIDOS + "\\" + fechaPartido + "\\" + "asignadas");
+        if  (!carpetasAsig.exists()) {
+            carpetasAsig.mkdir();
+        }
+        String pathEntradaOrigen = PATH_CARPETA_FECHAS_PARTIDOS + "\\" + fechaPartido + "\\" + emailEntrada;
+        String pathEntradaDestino = PATH_CARPETA_FECHAS_PARTIDOS + "\\" + fechaPartido + "\\" + "asignadas" + "\\" + emailEntrada;
+
+
+        Path temp = Files.move(Paths.get(pathEntradaOrigen),
+                        Paths.get(pathEntradaDestino));
+
+        if (temp != null) {
+            System.out.println("se ha movido el archivo bien jeje");
+        }
+
+
+        File borrar = new File(PATH_CARPETA_FECHAS_PARTIDOS + "\\" + fechaPartido + "\\" + emailEntrada);
+
+        System.out.println(borrar);
+        if (borrar.delete() ) {
+            System.out.println("oleole");
         }
     }
 }
