@@ -39,6 +39,8 @@ public class EnviarEmailUsuarios {
         props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
 
         File pdfEntrada = getPdfEntrada(fechaPartido);
+
+
         Session session = Session.getDefaultInstance(props);
         MimeMessage message = new MimeMessage(session);
 
@@ -67,7 +69,6 @@ public class EnviarEmailUsuarios {
         catch (MessagingException me) {
             me.printStackTrace();   //Si se produce un error
         }
-
         return pdfEntrada.getName();
     }
 

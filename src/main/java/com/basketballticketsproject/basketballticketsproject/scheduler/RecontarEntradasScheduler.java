@@ -38,7 +38,7 @@ public class RecontarEntradasScheduler {
     @Autowired
     private UsuarioRepo usuarioRepo;
 
-    //@Scheduled(cron = "*/80 * * * * *")
+    @Scheduled(cron = "0 0 14 ? * 4 ")
     public void enviarCorreo() {
         List<Partido> fechasSortAsc = partidoRepo.getFechasSortAsc();
         if (!CollectionUtils.isEmpty(fechasSortAsc)) {
@@ -49,11 +49,13 @@ public class RecontarEntradasScheduler {
                 String emailEntrada = enviarEmail.enviarEmailEntrada(usuario, partido.getFechaPartido());
                 System.out.println("emaill entrada: " + emailEntrada);
                 usuario.setEntrada(emailEntrada);
-                try {
+                /*try {
                     crearCarpetaEntradasAsignadas(partido.getFechaPartido(), emailEntrada);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                */
+
 
                 usuarioRepo.save(usuario);
             });
