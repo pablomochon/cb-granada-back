@@ -36,6 +36,7 @@ public class UsuarioService {
                 .orElseThrow(() -> new IllegalStateException("Employee not exist with id: " + id));
         updateUser.setEmail(usuarioNuevo.getEmail());
         updateUser.setNombre(usuarioNuevo.getNombre());
+        updateUser.setApellido(usuarioNuevo.getApellido());
         return usuarioRepo.save(updateUser);
     }
 
