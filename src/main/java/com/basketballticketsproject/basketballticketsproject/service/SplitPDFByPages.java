@@ -33,7 +33,7 @@ public class SplitPDFByPages {
             carpetaConFechas.mkdir();
         }
 
-        for(int i = 1;iterator.hasNext();i++) {
+        for(int i = 1; iterator.hasNext();i++) {
             PDDocument pd = iterator.next();
             pd.save(path + "\\" + i + ".pdf");
         }

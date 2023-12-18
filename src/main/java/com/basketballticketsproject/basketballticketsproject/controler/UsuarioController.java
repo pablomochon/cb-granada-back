@@ -1,9 +1,10 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
-import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
+import com.basketballticketsproject.basketballticketsproject.service.ResponseMessage;
 import com.basketballticketsproject.basketballticketsproject.service.SplitPDFByPages;
 import com.basketballticketsproject.basketballticketsproject.service.UsuarioService;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,6 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,6 +58,14 @@ public class UsuarioController {
     @PostMapping("/addUser")
     public ResponseEntity<Usuario> addUsuario(@RequestBody Usuario usuario) {
         return new ResponseEntity<>(usuarioService.saveUsuario(usuario), HttpStatus.CREATED);
+    }
+
+    //login
+    @PostMapping(path = "/login")
+    public ResponseEntity<?> loginEmployee(@RequestBody Usuario usuario)
+    {
+        ResponseMessage loginResponse = usuarioService.loginEmployee(usuario);
+        return ResponseEntity.ok(loginResponse);
     }
 
 

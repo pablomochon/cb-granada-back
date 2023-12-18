@@ -21,8 +21,12 @@ public class Usuario {
 
     private String apellido;
 
+    private String password;
+
     @Column(unique = true)
     private String email;
+
+    private boolean isAdmin = false;
 
     private int asistencia_previa;
 
