@@ -3,8 +3,10 @@ package com.basketballticketsproject.basketballticketsproject.service;
 import com.basketballticketsproject.basketballticketsproject.Excel.FechaPartido;
 import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
+import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.repo.PartidoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
+import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
 import com.poiji.bind.Poiji;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class PartidoService {
     @Autowired
     SorteoRepo sorteoRepo;
 
+    @Autowired
+    TicketRepo ticketRepo;
+
     public Partido addPartido(Partido partido) {
         return partidoRepo.save(partido);
     }
@@ -32,6 +37,7 @@ public class PartidoService {
     public List<Partido> getPartdios() {
         return partidoRepo.findAll();
     }
+
 
 
     public Optional<Partido> getPartidoById(UUID id) {
@@ -68,5 +74,9 @@ public class PartidoService {
                 carpeta.mkdir();
             }
         }
+    }
+
+    public List<Ticket> getTickets() {
+        return ticketRepo.findAll();
     }
 }

@@ -2,6 +2,7 @@ package com.basketballticketsproject.basketballticketsproject.controler;
 
 
 import com.basketballticketsproject.basketballticketsproject.entity.Partido;
+import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.service.PartidoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +20,7 @@ public class PartidoController {
     @Autowired
     PartidoService partidoService;
 
+
     @PostMapping("/addPartido")
     public Partido addPartido(@RequestBody Partido partido) {
         return partidoService.addPartido(partido);
@@ -32,6 +34,12 @@ public class PartidoController {
     @GetMapping("/getPartidos")
     public List<Partido> getPartidos(){
         return partidoService.getPartdios();
+    }
+
+
+    @GetMapping("/getTickets")
+    public List<Ticket> getTickets(){
+        return partidoService.getTickets();
     }
 
     @GetMapping("/getPartido/{partidoId}")

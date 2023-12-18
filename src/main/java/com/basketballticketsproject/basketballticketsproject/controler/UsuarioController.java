@@ -1,16 +1,18 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
+import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.service.ResponseMessage;
 import com.basketballticketsproject.basketballticketsproject.service.SplitPDFByPages;
 import com.basketballticketsproject.basketballticketsproject.service.UsuarioService;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
@@ -80,10 +82,15 @@ public class UsuarioController {
     }
 
     //dividir por paginas individuales el pdf con las 50 entradas de la carpeta que se especifique por parametro
-    @GetMapping("/splitPdf/{fecha}")
-    public void splitPdf(@PathVariable String fecha) throws IOException {
-        splitPDFByPages.splitPdf(fecha);
+    @GetMapping("/splitPdf")
+    public int splitPdf(@RequestParam("file") MultipartFile file, @RequestParam String partido) throws IOException {
+        return splitPDFByPages.splitPdf(file, partido);
     }
+
+   /* @GetMapping("/decode/{id}")
+    public String decode(@PathVariable UUID id) throws IOException {
+        return splitPDFByPages.decodeBase64ToPdf(id);
+    }*/
 
     //modificar un usuario dada su id
     @PutMapping("/modificarUsuario/{id}")
