@@ -40,8 +40,8 @@ public class  SorteoController {
 
 
     //guardar usurio que se apunte al partido, pasandole su id y la fecha del partido
-    @PostMapping("/saveUsuarioSorteo/{userID}")
-    public ResponseEntity<Sorteo> saveUsuarioSorteo(@PathVariable UUID userID, @RequestParam String fecha) {
+    @PostMapping("/saveUsuarioSorteo/{userID}/{fecha}")
+    public ResponseEntity<Sorteo> saveUsuarioSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
         Sorteo sorteo =  sorteoService.saveUsuarioSorteo(userID, fecha);
         if (ObjectUtils.isEmpty(sorteo)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -50,8 +50,8 @@ public class  SorteoController {
     }
 
     //quitar del sorteo a la persona que se quiera desinscribirse
-    @DeleteMapping("/deleteUsuarioFromSorteo/{userID}")
-    public void deleteUsuarioFromSorteo(@PathVariable UUID userID, @RequestParam String fecha) {
+    @DeleteMapping("/deleteUsuarioFromSorteo/{userID}/{fecha}")
+    public void deleteUsuarioFromSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
         sorteoService.deleteUsuarioFromSorteo(userID, fecha);
     }
 
