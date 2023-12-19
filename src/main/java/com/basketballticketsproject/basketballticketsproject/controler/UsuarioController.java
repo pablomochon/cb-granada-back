@@ -30,10 +30,6 @@ public class UsuarioController {
     @Autowired
     private SplitPDFByPages splitPDFByPages;
 
-    @GetMapping
-    public String funciona(){
-        return "HOLA MUNDOOOO";
-    }
 
     //encontrar user por nombre
     @GetMapping("/userName/{name}")
@@ -81,16 +77,13 @@ public class UsuarioController {
         return new ResponseEntity<>(allUsers, HttpStatus.OK);
     }
 
+    /*
     //dividir por paginas individuales el pdf con las 50 entradas de la carpeta que se especifique por parametro
     @GetMapping("/splitPdf")
     public int splitPdf(@RequestParam("file") MultipartFile file, @RequestParam String partido) throws IOException {
         return splitPDFByPages.splitPdf(file, partido);
-    }
-
-   /* @GetMapping("/decode/{id}")
-    public String decode(@PathVariable UUID id) throws IOException {
-        return splitPDFByPages.decodeBase64ToPdf(id);
     }*/
+
 
     //modificar un usuario dada su id
     @PutMapping("/modificarUsuario/{id}")

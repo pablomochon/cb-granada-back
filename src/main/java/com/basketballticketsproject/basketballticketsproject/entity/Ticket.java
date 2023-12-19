@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 import java.util.UUID;
 
 
@@ -24,11 +23,18 @@ public class Ticket {
 
     @Lob
     @Column(name = "pdfBase64", columnDefinition = "longtext")
-    @JsonIgnore
     private String pdfBase64;
 
-    private int entrada;
+    @Lob
+    @JsonIgnore
+    private byte[] imageData;
 
+    private String entrada;
+
+
+    private boolean entregada;
+
+    @JsonIgnore
     @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "partido_id")
     private Partido partido;

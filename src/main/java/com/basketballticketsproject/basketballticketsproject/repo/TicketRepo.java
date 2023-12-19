@@ -9,4 +9,6 @@ import java.util.UUID;
 public interface TicketRepo extends JpaRepository<Ticket, UUID> {
 
     Optional<Ticket> findById(UUID id);
+
+    Ticket findByEntrada(String entrada);
 }

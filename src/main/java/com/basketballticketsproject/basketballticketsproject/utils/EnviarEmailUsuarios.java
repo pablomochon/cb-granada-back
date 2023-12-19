@@ -1,6 +1,7 @@
 package com.basketballticketsproject.basketballticketsproject.utils;
 
 
+import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import jakarta.activation.DataHandler;
 import jakarta.activation.FileDataSource;
@@ -12,9 +13,11 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.*;
 
 import static com.basketballticketsproject.basketballticketsproject.utils.Constants.*;
@@ -88,5 +91,11 @@ public class EnviarEmailUsuarios {
             }
         }
         return entradas.get(result);
+    }
+
+
+    public static byte[] decodeBase64ToPdf(Ticket ticket) {
+        return Base64.getDecoder().decode(ticket.getPdfBase64());
+            //fos.write(decoder);
     }
 }

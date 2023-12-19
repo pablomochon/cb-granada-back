@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResponseMessage {
+public class ResponseMessage extends RuntimeException {
 
     private String message;
 }
