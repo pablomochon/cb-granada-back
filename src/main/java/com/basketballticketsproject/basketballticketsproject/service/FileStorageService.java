@@ -1,15 +1,17 @@
 package com.basketballticketsproject.basketballticketsproject.service;
 
 import com.basketballticketsproject.basketballticketsproject.entity.Partido;
+import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
 import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.repo.PartidoRepo;
+import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
+import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import com.basketballticketsproject.basketballticketsproject.utils.EnviarEmailUsuarios;
 import com.google.gson.Gson;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.util.*;
 
 @Service
@@ -28,6 +29,11 @@ public class FileStorageService {
 
     @Autowired
     private TicketRepo ticketRepo;
+
+    @Autowired
+    private UsuarioRepo usuarioRepo;
+    @Autowired
+    private SorteoRepo sorteoRepo;
 
 
     public int storeFile(MultipartFile multipartFile, String partidoString) throws IOException {
@@ -48,10 +54,11 @@ public class FileStorageService {
 
         Set<Ticket> ticketSet = new HashSet<>();
 
+        final Sorteo sorteo = new Sorteo();
+
         //comprobar si no se ha creado ese partido
         Partido byFechaPartido = partidoRepo.findByFechaPartido(partido.getFechaPartido());
 
-        System.out.println("holaaaaaa------------- "+ byFechaPartido);
 
         if (ObjectUtils.isEmpty(byFechaPartido)) {
             //recorrer todas las paginas del pdf
@@ -70,13 +77,16 @@ public class FileStorageService {
                 ticket.setPartido(partido);
                 ticketRepo.save(ticket);
 
-                partido.setTickets(ticketSet);
 
                 //guardo las entradas en el partido que corresponda
-                partidoRepo.save(partido);
+
                 pd.close();
 
             }
+            partido.setTickets(ticketSet);
+            partidoRepo.save(partido);
+            sorteo.setPartido(partido);
+            sorteoRepo.save(sorteo);
 
         }
         document.close();
@@ -90,4 +100,5 @@ public class FileStorageService {
         Ticket byEntrada = ticketRepo.findByEntrada(fileName);
         return EnviarEmailUsuarios.decodeBase64ToPdf(byEntrada);
     }
+
 }

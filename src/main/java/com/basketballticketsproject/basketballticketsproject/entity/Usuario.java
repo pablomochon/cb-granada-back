@@ -28,9 +28,8 @@ public class Usuario {
 
     private boolean isAdmin = false;
 
-    private int asistencia_previa;
 
-    private String entrada;
+    private List<String> entrada;
 
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
@@ -39,7 +38,7 @@ public class Usuario {
             },
             mappedBy = "usuarios")
     @JsonIgnore
-    private Set<Sorteo> sorteos = new HashSet<>();
+    private Set<Partido> partidos = new HashSet<>();
 
 
     @Override
@@ -48,9 +47,9 @@ public class Usuario {
                 "userId=" + userId +
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
-                ", asistencia_previa=" + asistencia_previa +
                 ", entrada=" + entrada +
-                ", sorteos=" + sorteos +
+                ", partidos=" + partidos +
                 '}';
     }
+
 }

@@ -3,10 +3,7 @@ package com.basketballticketsproject.basketballticketsproject.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -28,6 +25,12 @@ public class Partido {
 
     @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "partido_usuarios",
+            joinColumns = { @JoinColumn(name = "partido_id", referencedColumnName = "id") },
+            inverseJoinColumns = { @JoinColumn(name = "usuario_id", referencedColumnName = "userId") })
+    private Set<Usuario> usuarios = new LinkedHashSet<>();
 
 
     @Override

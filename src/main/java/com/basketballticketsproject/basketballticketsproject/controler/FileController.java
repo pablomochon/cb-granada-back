@@ -1,24 +1,17 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
-import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.service.FileStorageService;
-import com.basketballticketsproject.basketballticketsproject.service.UploadFileResponse;
-import jakarta.annotation.PostConstruct;
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.AllArgsConstructor;
+import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.util.Set;
+import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
@@ -28,6 +21,9 @@ public class FileController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private SorteoService sorteoService;
 
     //metodo para añadir un partido, junto con su pdf de entradas
     @PostMapping("/uploadFile")
@@ -43,6 +39,13 @@ public class FileController {
         byte[] imageData = fileStorageService.getFiles(fileName);
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(imageData);
+    }
+
+    @GetMapping("/enviarEntrada/{fecha}/{userID}")
+    public ResponseEntity<byte[]> enviarEntrada(@PathVariable String fecha, @PathVariable UUID userID) {
+        byte[] entrada = sorteoService.enviarEntrada(fecha, userID);
+
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(entrada);
     }
 
 
