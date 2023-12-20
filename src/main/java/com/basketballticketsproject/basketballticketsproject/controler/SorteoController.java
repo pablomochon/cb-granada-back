@@ -1,5 +1,6 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
+import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
@@ -41,8 +42,8 @@ public class  SorteoController {
 
     //guardar usurio que se apunte al partido, pasandole su id y la fecha del partido
     @PostMapping("/saveUsuarioSorteo/{userID}/{fecha}")
-    public ResponseEntity<Sorteo> saveUsuarioSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
-        Sorteo sorteo =  sorteoService.saveUsuarioSorteo(userID, fecha);
+    public ResponseEntity<Partido> saveUsuarioSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
+        Partido sorteo =  sorteoService.saveUsuarioSorteo(userID, fecha);
         if (ObjectUtils.isEmpty(sorteo)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

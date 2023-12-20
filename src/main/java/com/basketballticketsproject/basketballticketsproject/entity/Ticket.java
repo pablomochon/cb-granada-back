@@ -23,14 +23,10 @@ public class Ticket {
 
     @Lob
     @Column(name = "pdfBase64", columnDefinition = "longtext")
+    @JsonIgnore
     private String pdfBase64;
 
-    @Lob
-    @JsonIgnore
-    private byte[] imageData;
-
     private String entrada;
-
 
     private boolean entregada;
 
