@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.*;
@@ -30,9 +31,7 @@ public class FileStorageService {
     private TicketRepo ticketRepo;
 
 
-    public int storeFile(MultipartFile multipartFile, String partidoString) throws IOException {
-
-        File convFile = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+    public int storeFile(File convFile, String tituloPartido, String fechaPartido) throws IOException {
 
         //splittear el pdf en varios
         PDDocument document = PDDocument.load(convFile);
@@ -43,8 +42,9 @@ public class FileStorageService {
 
         Iterator<PDDocument> iterator = pages.listIterator();
 
-        Partido partido = new Gson().fromJson(partidoString, Partido.class);
-
+        Partido partido = new Partido();
+        partido.setNombrePartido(tituloPartido);
+        partido.setFechaPartido(fechaPartido);
 
         Set<Ticket> ticketSet = new HashSet<>();
 
@@ -90,4 +90,20 @@ public class FileStorageService {
         Ticket byEntrada = ticketRepo.findByEntrada(fileName);
         return EnviarEmailUsuarios.decodeBase64ToPdf(byEntrada);
     }
+
+    public File getFileBase(String base64) {
+    	File file = new File("Entradas.pdf");
+		try {
+			FileOutputStream fos = new FileOutputStream(file);
+			String cadenaLimpia = base64.replace("data:application/pdf;base64,", "");
+			byte[] decoder = Base64.getDecoder().decode(cadenaLimpia);
+			fos.write(decoder);
+			fos.flush();
+			fos.close();
+		} catch (IOException e) {
+			System.out.println("Error al decodificar pdf");
+		}
+		return file;
+    }
+
 }

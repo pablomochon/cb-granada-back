@@ -1,5 +1,6 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
+import com.basketballticketsproject.basketballticketsproject.entity.Pdf;
 import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.service.FileStorageService;
 import com.basketballticketsproject.basketballticketsproject.service.UploadFileResponse;
@@ -31,8 +32,8 @@ public class FileController {
 
     //metodo para añadir un partido, junto con su pdf de entradas
     @PostMapping("/uploadFile")
-    public int uploadFile(@RequestParam("file") MultipartFile file, @RequestParam String partido) throws IOException {
-        return  fileStorageService.storeFile(file, partido);
+    public int uploadFile(@RequestBody Pdf pdf) throws IOException {
+        return  fileStorageService.storeFile(fileStorageService.getFileBase(pdf.getFile()), pdf.getTituloPartido(), pdf.getFechaPartido());
 
     }
 
