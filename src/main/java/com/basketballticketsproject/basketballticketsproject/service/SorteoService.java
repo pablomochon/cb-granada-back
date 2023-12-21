@@ -9,17 +9,12 @@ import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import com.basketballticketsproject.basketballticketsproject.utils.EnviarEmailUsuarios;
-import jdk.swing.interop.SwingInterOpUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.sl.draw.geom.GuideIf;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.basketballticketsproject.basketballticketsproject.utils.Constants.NUM_ENTRADAS;
 
@@ -38,9 +33,9 @@ public class SorteoService {
     @Autowired
     private TicketRepo ticketRepo;
 
-    public Set<Usuario> getUsuariosSorteo(String fecha) {
-        Partido partido = partidoRepo.findByFechaPartido(fecha);
-        return partido.getUsuarios();
+    public Set<Usuario> getUsuariosSorteo(final String fecha) {
+        Sorteo sorteo = sorteoRepo.findByFecha(fecha);
+        return sorteo.getUsuarios();
     }
 
 
@@ -48,52 +43,75 @@ public class SorteoService {
         return sorteoRepo.findAll();
     }
 
-    public Partido saveUsuarioSorteo(UUID idUser, String fecha) {
-        Usuario usuario = usuarioRepo.findById(idUser).orElse(null);
-        Partido sorteoFecha = partidoRepo.findByFechaPartido(fecha);
+    public Sorteo saveUsuarioSorteo(final UUID idUser, final String fecha) {
+        final Usuario usuario = usuarioRepo.findById(idUser).orElse(null);
+        final Sorteo sorteoFecha = sorteoRepo.findByFecha(fecha);
         if (sorteoFecha.getUsuarios().size() <= NUM_ENTRADAS && !ObjectUtils.isEmpty(sorteoFecha)) {
             if (!ObjectUtils.isEmpty(usuario) && !sorteoFecha.getUsuarios().contains(usuario)) {
                 sorteoFecha.getUsuarios().add(usuario);
-                usuario.getPartidos().add(sorteoFecha);
-                partidoRepo.save(sorteoFecha);
+                //usuario.getSorteo().add(sorteo);
+                sorteoRepo.save(sorteoFecha);
+            } else {
+                throw new ResponseMessage("Ya estas apuntado");
             }
         }
         return sorteoFecha;
     }
 
-    public void deleteUsuarioFromSorteo(UUID userID, String fecha) {
-        Usuario usuario = usuarioRepo.findById(userID).orElse(null);
+    public void deleteUsuarioFromSorteo(final UUID userID, final String fecha) {
+        final Usuario usuario = usuarioRepo.findById(userID).orElse(null);
 
-        Partido sorteoFecha = partidoRepo.findByFechaPartido(fecha);
+        final Sorteo sorteoFecha = sorteoRepo.findByFecha(fecha);
         if (!ObjectUtils.isEmpty(usuario)) {
+            //Se borra al usuario del sorteo
             sorteoFecha.getUsuarios().remove(usuario);
-            usuario.getPartidos().remove(sorteoFecha);
+            usuario.getSorteos().remove(sorteoFecha);
 
-            partidoRepo.delete(sorteoFecha);
-            usuarioRepo.delete(usuario);
+            final Optional<Ticket> ticketUsuario = usuario.getTickets().stream().filter(ticket ->
+                    ticket.getFecha().equals(fecha)).findFirst();
+
+            if (ticketUsuario.isPresent()) {
+                //borrar entrada del usuario
+                usuario.getTickets().remove(ticketUsuario.get());
+                ticketUsuario.get().setUsuario(null);
+                ticketUsuario.get().setEntregada(false);
+                ticketRepo.save(ticketUsuario.get());
+            }
+            usuarioRepo.save(usuario);
+            sorteoRepo.save(sorteoFecha);
         }
     }
 
-    public byte[] enviarEntrada(String fecha, UUID user) {
-        Usuario usuario = usuarioRepo.findById(user).orElse(null);
-        Set<Usuario> usuariosSorteo = this.getUsuariosSorteo(fecha);
-        byte[] entrada = new byte[0];
+    public byte[] enviarEntrada(final String fecha, final UUID user) {
+        final Usuario usuario = usuarioRepo.findById(user).orElse(null);
+        final Set<Usuario> usuariosSorteo = this.getUsuariosSorteo(fecha);
+        final byte[] entrada;
+
         //para comprobar si el usuario está inscrito al sorteo
         if(usuariosSorteo.contains(usuario) && usuario != null) {
-            Partido partido = partidoRepo.findByFechaPartido(fecha);
+            final Partido partido = partidoRepo.findByFechaPartido(fecha);
+
+            //comprobar si ese usuario ya tiene una entrada de ese partido
+            final Optional<Ticket> entradaUsuario = usuario.getTickets().stream().filter(ticket ->
+                    ticket.getFecha().equals(fecha)).findFirst();
 
             //filtro para obtener las entradas que no estan entregadas y cojo la primera
-            Optional<Ticket> ticketToSend = partido.getTickets().stream().filter(ticket -> !ticket.isEntregada()).findFirst();
-            if (ticketToSend.isPresent()) {
+            final Optional<Ticket> ticketToSend = partido.getTickets().stream().filter(ticket -> !ticket.isEntregada())
+                    .findFirst();
+            if (ticketToSend.isPresent() && !entradaUsuario.isPresent()) {
                 //descodificar base64 en pdf
                 ticketToSend.get().setEntregada(true);
+                ticketToSend.get().setFecha(fecha);
                 System.out.println("ENTRADA "+ ticketToSend.get().getEntrada());
                 entrada = EnviarEmailUsuarios.decodeBase64ToPdf(ticketToSend.get());
-                usuario.setEntrada(Collections.singletonList(StringUtils.join(partido.getFechaPartido(),
-                        ticketToSend.get().getEntrada())));
 
-                ticketRepo.updateEntregadaByPartidoEquals(true, partido);
+                ticketToSend.get().setUsuario(usuario);
+                usuario.getTickets().add(ticketToSend.get());
+
+                ticketRepo.save(ticketToSend.get());
                 usuarioRepo.save(usuario);
+            } else {
+                throw new ResponseMessage("Ya tienes una entrada de este partido");
             }
         }
         else {
@@ -101,5 +119,22 @@ public class SorteoService {
         }
         return entrada;
     }
+
+    /*
+    public List<byte[]> obtenerEntradasSobrantes(String fecha) {
+        Partido partidoFecha = partidoRepo.findByFechaPartido(fecha);
+        Set<Ticket> ticketStream = partidoFecha.getTickets().stream().filter(partido -> !partido.isEntregada())
+                .collect(Collectors.toSet());
+
+        List<byte[]> listaEntradas = new ArrayList<>();
+        
+        ticketStream.forEach(ticket -> {
+            byte[] bytes = EnviarEmailUsuarios.decodeBase64ToPdf(ticket);
+            listaEntradas.add(bytes);
+        });
+        return listaEntradas;
+    }
+
+     */
 
 }

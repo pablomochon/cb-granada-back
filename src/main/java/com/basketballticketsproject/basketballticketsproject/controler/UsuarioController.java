@@ -26,7 +26,7 @@ public class UsuarioController {
     //encontrar user por nombre
     @GetMapping("/userName/{name}")
     public ResponseEntity<Usuario> getUserByName(@PathVariable String name) {
-        Usuario user = usuarioService.getUsuarioByName(name);
+        final Usuario user = usuarioService.getUsuarioByName(name);
         if (ObjectUtils.isEmpty(user)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -36,7 +36,7 @@ public class UsuarioController {
     //encontrar user por email
     @GetMapping("/userEmail/{email}")
     public  ResponseEntity<Usuario> getUserByEmail(@PathVariable String email) {
-        Usuario user = usuarioService.getUsuarioByEmail(email);
+        final Usuario user = usuarioService.getUsuarioByEmail(email);
         if (ObjectUtils.isEmpty(user)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -52,17 +52,17 @@ public class UsuarioController {
 
     //login
     @PostMapping(path = "/login")
-    public ResponseEntity<?> loginEmployee(@RequestBody Usuario usuario)
+    public ResponseEntity<Usuario> loginEmployee(@RequestBody Usuario usuario)
     {
-        ResponseMessage loginResponse = usuarioService.loginEmployee(usuario);
-        return ResponseEntity.ok(loginResponse);
+        final Usuario login = usuarioService.loginEmployee(usuario);
+        return ResponseEntity.ok(login);
     }
 
 
     //obtener todos los usuarios
     @GetMapping("/getAllUsers")
     public ResponseEntity<List<Usuario>> getAllUsers() {
-        List<Usuario> allUsers = usuarioService.getAllUsers();
+        final List<Usuario> allUsers = usuarioService.getAllUsers();
         if (allUsers.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
@@ -73,7 +73,7 @@ public class UsuarioController {
     //modificar un usuario dada su id
     @PutMapping("/modificarUsuario/{id}")
     public  ResponseEntity<Usuario> usuario (@PathVariable UUID id, @RequestBody Usuario usuarioNuevo){
-        Usuario user = usuarioService.modificarUsuario(id, usuarioNuevo);
+        final Usuario user = usuarioService.modificarUsuario(id, usuarioNuevo);
         if (ObjectUtils.isEmpty(user)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

@@ -26,12 +26,6 @@ public class Partido {
     @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "partido_usuarios",
-            joinColumns = { @JoinColumn(name = "partido_id", referencedColumnName = "id") },
-            inverseJoinColumns = { @JoinColumn(name = "usuario_id", referencedColumnName = "userId") })
-    private Set<Usuario> usuarios = new LinkedHashSet<>();
-
 
     @Override
     public String toString() {

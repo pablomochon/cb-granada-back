@@ -3,8 +3,6 @@ package com.basketballticketsproject.basketballticketsproject.service;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +27,7 @@ public class UsuarioService {
         return usuarioRepo.findByEmail(email);
     }
 
-    public Usuario saveUsuario(Usuario usuario) {
+    public Usuario saveUsuario(final Usuario usuario) {
         usuario.setPassword(this.passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepo.save(usuario);
     }
@@ -38,8 +36,8 @@ public class UsuarioService {
         return usuarioRepo.findAll();
     }
 
-    public Usuario modificarUsuario(UUID id, Usuario usuarioNuevo) {
-        Usuario updateUser = usuarioRepo.findById(id)
+    public Usuario modificarUsuario(final UUID id, final Usuario usuarioNuevo) {
+        final Usuario updateUser = usuarioRepo.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Employee not exist with id: " + id));
         updateUser.setEmail(usuarioNuevo.getEmail());
         updateUser.setNombre(usuarioNuevo.getNombre());
@@ -53,7 +51,7 @@ public class UsuarioService {
         usuarioRepo.delete(deleteUser);
     }
 
-    public ResponseMessage  loginEmployee(Usuario loginUser) {
+    public Usuario loginEmployee(Usuario loginUser) {
         Usuario user = usuarioRepo.findByEmail(loginUser.getEmail());
         if (user != null) {
             String password = loginUser.getPassword();
@@ -62,15 +60,15 @@ public class UsuarioService {
             if (isPwdRight) {
                 Optional<Usuario> employee = usuarioRepo.findOneByEmailAndPassword(loginUser.getEmail(), encodedPassword);
                 if (employee.isPresent()) {
-                    return new ResponseMessage("Login Success");
+                    return employee.get();
                 } else {
-                    return new ResponseMessage("Login Failed");
+                    throw  new ResponseMessage("Login Failed");
                 }
             } else {
-                return new ResponseMessage("password Not Match");
+                throw  new ResponseMessage("password Not Match");
             }
         }else {
-            return new ResponseMessage("Email not exits");
+            throw new ResponseMessage("Email not exits");
         }
     }
 }

@@ -31,6 +31,11 @@ public class Usuario {
 
     private List<String> entrada;
 
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private Set<Ticket> tickets;
+
+
     @ManyToMany(fetch = FetchType.EAGER,
             cascade = {
                     CascadeType.PERSIST,
@@ -38,7 +43,7 @@ public class Usuario {
             },
             mappedBy = "usuarios")
     @JsonIgnore
-    private Set<Partido> partidos = new HashSet<>();
+    private Set<Sorteo> sorteos = new HashSet<>();
 
 
     @Override
@@ -48,7 +53,7 @@ public class Usuario {
                 ", nombre='" + nombre + '\'' +
                 ", email='" + email + '\'' +
                 ", entrada=" + entrada +
-                ", partidos=" + partidos +
+                ", partidos=" + sorteos +
                 '}';
     }
 

@@ -30,7 +30,7 @@ public class PartidoService {
     @Autowired
     TicketRepo ticketRepo;
 
-    public Partido addPartido(Partido partido) {
+    public Partido addPartido(final Partido partido) {
         return partidoRepo.save(partido);
     }
 
@@ -40,7 +40,7 @@ public class PartidoService {
 
 
 
-    public Optional<Partido> getPartidoById(UUID id) {
+    public Optional<Partido> getPartidoById(final UUID id) {
         return partidoRepo.findById(id);
     }
 

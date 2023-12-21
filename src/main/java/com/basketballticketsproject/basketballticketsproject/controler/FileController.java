@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public class FileController {
     @PostMapping("/subirPdf/{nombrePartido}/{fechaPartido}")
     public int uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String nombrePartido,
                           @PathVariable String fechaPartido) throws IOException {
-        File convFile =  new File(Objects.requireNonNull(file.getOriginalFilename()));
+        final File convFile =  new File(Objects.requireNonNull(file.getOriginalFilename()));
         return  fileStorageService.storeFile(convFile, nombrePartido, fechaPartido);
 
     }
@@ -58,10 +59,20 @@ public class FileController {
     //enviar entrada al usuario
     @GetMapping("/enviarEntrada/{fecha}/{userID}")
     public ResponseEntity<byte[]> enviarEntrada(@PathVariable String fecha, @PathVariable UUID userID) {
-        byte[] entrada = sorteoService.enviarEntrada(fecha, userID);
+        final byte[] entrada = sorteoService.enviarEntrada(fecha, userID);
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(entrada);
     }
+
+    /*
+    @GetMapping("/entradasSobrantes/{fecha}")
+    public ResponseEntity<List<byte[]>> entradasSobrantes(@PathVariable String fecha) {
+        List<byte[]> entrada = sorteoService.obtenerEntradasSobrantes(fecha);
+
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(entrada.forEach(entrada);
+    }
+
+     */
 
 
 }
