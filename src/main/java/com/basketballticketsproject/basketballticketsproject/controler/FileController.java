@@ -1,7 +1,6 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
 import com.basketballticketsproject.basketballticketsproject.entity.Pdf;
-import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.service.FileStorageService;
 import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 @CrossOrigin(origins = "http://localhost:4200")
@@ -27,7 +28,7 @@ public class FileController {
     @Autowired
     private SorteoService sorteoService;
 
-    //metodo para añadir un partido, junto con su pdf de entradas
+    //metodo para añadir un partido con el formulario del front
     @PostMapping("/uploadFile")
     public int uploadFile(@RequestBody Pdf pdf) throws IOException {
         return  fileStorageService.storeFile(fileStorageService.getFileBase(pdf.getFile()), pdf.getTituloPartido(), pdf.getFechaPartido());
@@ -35,6 +36,15 @@ public class FileController {
     }
 
 
+    //metodo para añadir un partido, junto con su pdf de entradas DESDE POSTMAN
+    @PostMapping("/subirPdf/{nombrePartido}/{fechaPartido}")
+    public int uploadFile(@RequestParam("file") MultipartFile file, @PathVariable String nombrePartido,
+                          @PathVariable String fechaPartido) throws IOException {
+        File convFile =  new File(Objects.requireNonNull(file.getOriginalFilename()));
+        return  fileStorageService.storeFile(convFile, nombrePartido, fechaPartido);
+
+    }
+/*
     //metodo para obtener la entrada
     @GetMapping("/getFileByName/{fileName}")
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
@@ -43,6 +53,9 @@ public class FileController {
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(imageData);
     }
 
+ */
+
+    //enviar entrada al usuario
     @GetMapping("/enviarEntrada/{fecha}/{userID}")
     public ResponseEntity<byte[]> enviarEntrada(@PathVariable String fecha, @PathVariable UUID userID) {
         byte[] entrada = sorteoService.enviarEntrada(fecha, userID);
