@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import java.io.File;
+import java.net.URLConnection;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static com.basketballticketsproject.basketballticketsproject.utils.Constants.NUM_ENTRADAS;
 
@@ -85,9 +86,10 @@ public class SorteoService {
     public byte[] enviarEntrada(final String fecha, final UUID user) {
         final Usuario usuario = usuarioRepo.findById(user).orElse(null);
         final Set<Usuario> usuariosSorteo = this.getUsuariosSorteo(fecha);
-        final byte[] entrada;
+        File file;
 
         //para comprobar si el usuario está inscrito al sorteo
+        byte[] entrada;
         if(usuariosSorteo.contains(usuario) && usuario != null) {
             final Partido partido = partidoRepo.findByFechaPartido(fecha);
 
@@ -99,17 +101,13 @@ public class SorteoService {
             final Optional<Ticket> ticketToSend = partido.getTickets().stream().filter(ticket -> !ticket.isEntregada())
                     .findFirst();
             if (ticketToSend.isPresent() && !entradaUsuario.isPresent()) {
-                //descodificar base64 en pdf
-                ticketToSend.get().setEntregada(true);
-                ticketToSend.get().setFecha(fecha);
-                System.out.println("ENTRADA "+ ticketToSend.get().getEntrada());
+                saveTicketAndUser(ticketToSend.get(), fecha, usuario);
+
+                //descodificar base64 
                 entrada = EnviarEmailUsuarios.decodeBase64ToPdf(ticketToSend.get());
+                //file = crearPdfEntrada(ticketToSend.get());
 
-                ticketToSend.get().setUsuario(usuario);
-                usuario.getTickets().add(ticketToSend.get());
 
-                ticketRepo.save(ticketToSend.get());
-                usuarioRepo.save(usuario);
             } else {
                 throw new ResponseMessage("Ya tienes una entrada de este partido");
             }
@@ -118,6 +116,16 @@ public class SorteoService {
             throw new ResponseMessage("No estas apuntado a este partido");
         }
         return entrada;
+    }
+
+    private void saveTicketAndUser(Ticket ticket, String fecha, Usuario usuario) {
+        ticket.setEntregada(true);
+        ticket.setFecha(fecha);
+        ticket.setUsuario(usuario);
+        usuario.getTickets().add(ticket);
+
+        ticketRepo.save(ticket);
+        usuarioRepo.save(usuario);
     }
 
     /*

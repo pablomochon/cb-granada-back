@@ -13,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -32,7 +31,7 @@ public class FileController {
     //metodo para añadir un partido con el formulario del front
     @PostMapping("/uploadFile")
     public int uploadFile(@RequestBody Pdf pdf) throws IOException {
-        return  fileStorageService.storeFile(fileStorageService.getFileBase(pdf.getFile()), pdf.getTituloPartido(), pdf.getFechaPartido());
+        return fileStorageService.storeFile(fileStorageService.getFileBase(pdf.getFile()), pdf.getTituloPartido(), pdf.getFechaPartido());
 
     }
 
@@ -60,9 +59,11 @@ public class FileController {
     @GetMapping("/enviarEntrada/{fecha}/{userID}")
     public ResponseEntity<byte[]> enviarEntrada(@PathVariable String fecha, @PathVariable UUID userID) {
         final byte[] entrada = sorteoService.enviarEntrada(fecha, userID);
-
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(entrada);
     }
+
+
+
 
     /*
     @GetMapping("/entradasSobrantes/{fecha}")
