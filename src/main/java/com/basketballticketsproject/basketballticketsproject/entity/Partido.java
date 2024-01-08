@@ -26,12 +26,4 @@ public class Partido {
     @OneToMany(mappedBy = "partido", cascade = CascadeType.ALL)
     private Set<Ticket> tickets;
 
-
-    @Override
-    public String toString() {
-        return "Partido{" +
-                "id=" + id +
-                ", fechaPartido='" + fechaPartido + '\'' +
-                '}';
-    }
 }

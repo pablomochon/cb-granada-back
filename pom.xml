@@ -125,9 +125,17 @@
 			<version>3.14.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/dev.mccue/guava-primitives -->
+		<dependency>
+			<groupId>dev.mccue</groupId>
+			<artifactId>guava-primitives</artifactId>
+			<version>0.0.4</version>
+		</dependency>
 
 
-    </dependencies>
+
+
+	</dependencies>
 
 	<build>
 		<plugins>

@@ -1,8 +1,9 @@
 package com.basketballticketsproject.basketballticketsproject.controler;
 
-import com.basketballticketsproject.basketballticketsproject.entity.Pdf;
+import com.basketballticketsproject.basketballticketsproject.dao.Pdf;
 import com.basketballticketsproject.basketballticketsproject.service.FileStorageService;
 import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,8 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -44,16 +44,16 @@ public class FileController {
         return  fileStorageService.storeFile(convFile, nombrePartido, fechaPartido);
 
     }
-/*
-    //metodo para obtener la entrada
+
+    //metodo para obtener una entrada con su nombre
     @GetMapping("/getFileByName/{fileName}")
     public ResponseEntity<byte[]> getImage(@PathVariable String fileName) {
-        byte[] imageData = fileStorageService.getFiles(fileName);
+        byte[] imageData = fileStorageService.getFileByNumber(fileName);
 
         return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(imageData);
     }
 
- */
+
 
     //enviar entrada al usuario
     @GetMapping("/enviarEntrada/{fecha}/{userID}")
@@ -63,17 +63,17 @@ public class FileController {
     }
 
 
+//juntar cada pdf en uno?
 
 
-    /*
     @GetMapping("/entradasSobrantes/{fecha}")
-    public ResponseEntity<List<byte[]>> entradasSobrantes(@PathVariable String fecha) {
-        List<byte[]> entrada = sorteoService.obtenerEntradasSobrantes(fecha);
+    public ResponseEntity<byte[]> entradasSobrantes(@PathVariable String fecha, HttpServletResponse response) throws IOException {
+        byte[] bytes = sorteoService.obtenerEntradasSobrantes(fecha);
+        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(bytes);
 
-        return ResponseEntity.status(HttpStatus.OK).contentType(MediaType.valueOf("application/pdf")).body(entrada.forEach(entrada);
     }
 
-     */
+
 
 
 }

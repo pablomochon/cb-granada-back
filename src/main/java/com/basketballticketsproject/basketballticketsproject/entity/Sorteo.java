@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -29,11 +28,4 @@ public class Sorteo {
             joinColumns = { @JoinColumn(name = "sorteo_id") },
             inverseJoinColumns = { @JoinColumn(name = "usuario_id") })
     private Set<Usuario> usuarios = new HashSet<>();
-    @Override
-    public String toString() {
-        return "Sorteo{" +
-                "idSorteo=" + idSorteo +
-                ", partido=" + partido +
-                '}';
-    }
 }

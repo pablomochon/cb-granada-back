@@ -1,6 +1,10 @@
 package com.basketballticketsproject.basketballticketsproject.service;
 
+import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
+import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
+import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
+import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,6 +19,12 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepo usuarioRepo;
+
+    @Autowired
+    private SorteoRepo sorteoRepo;
+
+    @Autowired
+    private TicketRepo ticketRepo;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -48,6 +58,19 @@ public class UsuarioService {
     public void borrarUsuario(UUID id) {
         Usuario deleteUser = usuarioRepo.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Employee not exist with id: " + id));
+        List<Sorteo> sorteos = sorteoRepo.findAll();
+        for (Sorteo sorteo : sorteos) {
+            sorteo.getUsuarios().remove(deleteUser);
+        }
+
+        Optional<Ticket> ticket = ticketRepo.findByUsuario(deleteUser);
+        if (ticket.isPresent()) {
+            ticket.get().setUsuario(null);
+            ticketRepo.save(ticket.get());
+        }
+
+        deleteUser.setTickets(null);
+        sorteoRepo.saveAll(sorteos);
         usuarioRepo.delete(deleteUser);
     }
 

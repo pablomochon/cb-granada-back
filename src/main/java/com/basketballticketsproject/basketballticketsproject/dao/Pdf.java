@@ -1,8 +1,11 @@
-package com.basketballticketsproject.basketballticketsproject.entity;
+package com.basketballticketsproject.basketballticketsproject.dao;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Pdf {
     private String file;
     private String tituloPartido;

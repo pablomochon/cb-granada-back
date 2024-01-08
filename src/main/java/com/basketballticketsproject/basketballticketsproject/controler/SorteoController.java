@@ -2,6 +2,7 @@ package com.basketballticketsproject.basketballticketsproject.controler;
 
 import com.basketballticketsproject.basketballticketsproject.entity.Partido;
 import com.basketballticketsproject.basketballticketsproject.entity.Sorteo;
+import com.basketballticketsproject.basketballticketsproject.entity.Ticket;
 import com.basketballticketsproject.basketballticketsproject.entity.Usuario;
 import com.basketballticketsproject.basketballticketsproject.service.SorteoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,11 @@ public class  SorteoController {
     @DeleteMapping("/deleteUsuarioFromSorteo/{userID}/{fecha}")
     public void deleteUsuarioFromSorteo(@PathVariable UUID userID, @PathVariable String fecha) {
         sorteoService.deleteUsuarioFromSorteo(userID, fecha);
+    }
+
+    @GetMapping("/getEntradasNoAsignadas/{fecha}")
+    public List<Ticket> getEntradasNoAsignadas(@PathVariable String fecha) {
+        return  sorteoService.getEntradasNoAsignadas(fecha);
     }
 
 }

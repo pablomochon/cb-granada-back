@@ -9,6 +9,7 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -28,11 +29,11 @@ public class Usuario {
 
     private boolean isAdmin = false;
 
-
     private List<String> entrada;
 
-
-    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "usuario", cascade = {
+            CascadeType.ALL
+    })
     private Set<Ticket> tickets;
 
 
@@ -44,17 +45,5 @@ public class Usuario {
             mappedBy = "usuarios")
     @JsonIgnore
     private Set<Sorteo> sorteos = new HashSet<>();
-
-
-    @Override
-    public String toString() {
-        return "Usuario{" +
-                "userId=" + userId +
-                ", nombre='" + nombre + '\'' +
-                ", email='" + email + '\'' +
-                ", entrada=" + entrada +
-                ", partidos=" + sorteos +
-                '}';
-    }
 
 }

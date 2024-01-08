@@ -8,6 +8,7 @@ import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.multipdf.Splitter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.*;
+
+import static com.basketballticketsproject.basketballticketsproject.utils.Constants.NOMBRE_PDF_ENTRADAS;
+import static com.basketballticketsproject.basketballticketsproject.utils.Constants.REPLACE_BASE64;
 
 @Service
 @Slf4j
@@ -93,10 +97,10 @@ public class FileStorageService {
 
 
     public File getFileBase(final String base64) {
-    	final File file = new File("Entradas.pdf");
+    	final File file = new File(NOMBRE_PDF_ENTRADAS);
 		try {
 			FileOutputStream fos = new FileOutputStream(file);
-			String cadenaLimpia = base64.replace("data:application/pdf;base64,", "");
+			String cadenaLimpia = base64.replace(REPLACE_BASE64, StringUtils.EMPTY);
 			byte[] decoder = Base64.getDecoder().decode(cadenaLimpia);
 			fos.write(decoder);
 			fos.flush();
@@ -105,6 +109,16 @@ public class FileStorageService {
 			log.info("Error al decodificar pdf", e);
 		}
 		return file;
+    }
+
+    public byte[] getFileByNumber(String fileName) {
+        Ticket byEntrada = ticketRepo.findByEntrada(fileName);
+        return FileStorageService.decodeBase64ToPdf(byEntrada);
+    }
+
+    public static byte[] decodeBase64ToPdf(Ticket ticket) {
+        return Base64.getDecoder().decode(ticket.getPdfBase64());
+        //fos.write(decoder);
     }
 
 }

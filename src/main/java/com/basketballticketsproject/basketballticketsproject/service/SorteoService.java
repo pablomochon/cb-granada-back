@@ -8,13 +8,11 @@ import com.basketballticketsproject.basketballticketsproject.repo.PartidoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.SorteoRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.TicketRepo;
 import com.basketballticketsproject.basketballticketsproject.repo.UsuarioRepo;
-import com.basketballticketsproject.basketballticketsproject.utils.EnviarEmailUsuarios;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import java.io.File;
-import java.net.URLConnection;
 import java.util.*;
 
 import static com.basketballticketsproject.basketballticketsproject.utils.Constants.NUM_ENTRADAS;
@@ -72,7 +70,7 @@ public class SorteoService {
                     ticket.getFecha().equals(fecha)).findFirst();
 
             if (ticketUsuario.isPresent()) {
-                //borrar entrada del usuario
+                //si el usuario tiene una entrada, se borra y se vuelve a poner entragada a false
                 usuario.getTickets().remove(ticketUsuario.get());
                 ticketUsuario.get().setUsuario(null);
                 ticketUsuario.get().setEntregada(false);
@@ -102,12 +100,8 @@ public class SorteoService {
                     .findFirst();
             if (ticketToSend.isPresent() && !entradaUsuario.isPresent()) {
                 saveTicketAndUser(ticketToSend.get(), fecha, usuario);
-
                 //descodificar base64 
-                entrada = EnviarEmailUsuarios.decodeBase64ToPdf(ticketToSend.get());
-                //file = crearPdfEntrada(ticketToSend.get());
-
-
+                entrada = FileStorageService.decodeBase64ToPdf(ticketToSend.get());
             } else {
                 throw new ResponseMessage("Ya tienes una entrada de este partido");
             }
@@ -128,21 +122,22 @@ public class SorteoService {
         usuarioRepo.save(usuario);
     }
 
-    /*
-    public List<byte[]> obtenerEntradasSobrantes(String fecha) {
-        Partido partidoFecha = partidoRepo.findByFechaPartido(fecha);
-        Set<Ticket> ticketStream = partidoFecha.getTickets().stream().filter(partido -> !partido.isEntregada())
-                .collect(Collectors.toSet());
 
-        List<byte[]> listaEntradas = new ArrayList<>();
-        
-        ticketStream.forEach(ticket -> {
-            byte[] bytes = EnviarEmailUsuarios.decodeBase64ToPdf(ticket);
-            listaEntradas.add(bytes);
-        });
-        return listaEntradas;
+    public byte[] obtenerEntradasSobrantes(String fecha){
+
+        Partido partidoFecha = partidoRepo.findByFechaPartido(fecha);
+        List<Ticket> ticketStream = partidoFecha.getTickets().stream().filter(partido -> !partido.isEntregada()).toList();
+
+        byte[] bytesPdf = new byte[0];
+        for(Ticket ticket : ticketStream) {
+            bytesPdf = FileStorageService.decodeBase64ToPdf(ticket);
+        }
+
+        return Base64.getUrlDecoder().decode(bytesPdf);
     }
 
-     */
-
+    public List<Ticket> getEntradasNoAsignadas(String fecha) {
+        Partido partidoFecha = partidoRepo.findByFechaPartido(fecha);
+        return  partidoFecha.getTickets().stream().filter(partido -> !partido.isEntregada()).toList();
+    }
 }
