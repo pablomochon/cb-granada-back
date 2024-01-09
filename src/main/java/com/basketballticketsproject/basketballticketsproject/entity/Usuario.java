@@ -16,7 +16,7 @@ import java.util.*;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID userId;
+    private UUID user_id;
 
     private String nombre;
 
@@ -27,7 +27,7 @@ public class Usuario {
     @Column(unique = true)
     private String email;
 
-    private boolean isAdmin = false;
+    private boolean is_admin = false;
 
     private List<String> entrada;
 
